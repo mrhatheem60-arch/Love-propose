@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Will You Marry Me? 💍</title>
+  <meta name="description" content="A special proposal just for you">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #1a0a0a;
+      color: #f5e6d8;
+      font-family: 'Lato', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Falling Petals ── */
+    .petal {
+      position: fixed;
+      pointer-events: none;
+      opacity: 0;
+      animation: fall linear infinite;
+      z-index: 0;
+    }
+    @keyframes fall {
+      0%   { transform: translateY(-40px) rotate(0deg); opacity: 0; }
+      10%  { opacity: 0.6; }
+      90%  { opacity: 0.4; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* ── Pages ── */
+    .page {
+      display: none;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+    .page.active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Hero Page ── */
+    #page-hero {
+      background: radial-gradient(ellipse at 50% 40%, #3d0c0c 0%, #1a0a0a 70%);
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+
+    .candle-row {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      margin-bottom: 2.5rem;
+    }
+    .candle {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: candleFlicker 3s ease-in-out infinite;
+    }
+    .candle:nth-child(2) { animation: candleFlicker2 3s ease-in-out infinite; }
+
+    @keyframes candleFlicker {
+      0%, 100% { transform: scaleX(1); }
+      50% { transform: scaleX(0.97) scaleY(1.02); }
+    }
+    @keyframes candleFlicker2 {
+      0%, 100% { transform: scale(1.2); }
+      50% { transform: scale(1.18) scaleY(1.02); }
+    }
+
+    .flame {
+      width: 10px;
+      height: 18px;
+      background: radial-gradient(ellipse at 50% 80%, #fff5cc, #ffb830, #ff6b00);
+      border-radius: 50% 50% 30% 30%;
+      animation: flameAnim 1.5s ease-in-out infinite alternate;
+      box-shadow: 0 0 8px 4px rgba(255,160,30,0.35), 0 0 20px 8px rgba(255,100,0,0.15);
+    }
+    @keyframes flameAnim {
+      0%   { transform: skewX(-3deg) scaleY(1); }
+      100% { transform: skewX(4deg) scaleY(1.07); }
+    }
+
+    .wick { width: 2px; height: 6px; background: #555; }
+    .candle-body {
+      width: 14px;
+      height: 55px;
+      background: linear-gradient(to right, #f5e6c8, #fffdf5, #e8d5b0);
+      border-radius: 2px 2px 4px 4px;
+    }
+    .candle-base {
+      width: 18px;
+      height: 5px;
+      background: #c9aa7a;
+      border-radius: 0 0 3px 3px;
+    }
+
+    .hero-intro {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(14px, 3vw, 17px);
+      color: #c49a6c;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.8rem;
+      animation: fadeUp 1.5s ease both 0.3s;
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 12vw, 90px);
+      font-weight: 300;
+      line-height: 1.0;
+      color: #f5e0cc;
+      margin-bottom: 1.2rem;
+      animation: fadeUp 1.5s ease both 0.6s;
+    }
+    .hero-title span { color: #e8734a; font-style: italic; }
+
+    .hero-sub {
+      font-size: 13px;
+      color: #9e7a60;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-bottom: 3rem;
+      animation: fadeUp 1.5s ease both 0.9s;
+    }
+
+    .begin-btn {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-style: italic;
+      color: #f5e0cc;
+      background: transparent;
+      border: 1px solid rgba(245,224,204,0.35);
+      padding: 14px 42px;
+      cursor: pointer;
+      letter-spacing: 0.1em;
+      border-radius: 40px;
+      transition: all 0.4s ease;
+      animation: fadeUp 1.5s ease both 1.2s;
+    }
+    .begin-btn:hover {
+      background: rgba(245,224,204,0.08);
+      border-color: rgba(245,224,204,0.6);
+      color: #fff;
+      transform: scale(1.04);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Story Pages ── */
+    .story-page {
+      background: #180808;
+      padding: 3.5rem 2rem;
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .step-label {
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #7a4f35;
+      margin-bottom: 1.2rem;
+    }
+
+    .story-icon {
+      font-size: 42px;
+      margin-bottom: 1.5rem;
+      display: block;
+      animation: heartbeat 2s ease-in-out infinite;
+    }
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      15% { transform: scale(1.15); }
+      30% { transform: scale(1); }
+      45% { transform: scale(1.08); }
+    }
+
+    .story-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(30px, 7vw, 48px);
+      font-weight: 300;
+      color: #f5e0cc;
+      margin-bottom: 1.4rem;
+      line-height: 1.2;
+    }
+    .story-heading em { color: #e8734a; font-style: italic; }
+
+    .story-text {
+      font-size: clamp(14px, 3vw, 16px);
+      line-height: 1.85;
+      color: #b08878;
+      max-width: 500px;
+      margin: 0 auto 2.5rem;
+    }
+    .story-text em { color: #d4a080; font-style: italic; }
+
+    .nav-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      font-style: italic;
+      padding: 11px 32px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.05em;
+    }
+    .btn-prev {
+      background: transparent;
+      color: #7a5040;
+      border: 1px solid rgba(122,80,64,0.4);
+    }
+    .btn-prev:hover { color: #c49a6c; border-color: rgba(196,154,108,0.5); }
+
+    .btn-next {
+      background: linear-gradient(135deg, #8b2020, #c0412a);
+      color: #ffe8d8;
+      border: none;
+      box-shadow: 0 0 25px rgba(180,50,30,0.4);
+    }
+    .btn-next:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 35px rgba(200,70,40,0.5);
+    }
+
+    /* ── Question Page ── */
+    #page-question {
+      background: radial-gradient(ellipse at 50% 50%, #2e0a0a 0%, #0d0404 70%);
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+
+    .ring-container {
+      margin: 0 auto 2.5rem;
+      width: 110px;
+      height: 110px;
+      position: relative;
+      animation: ringFloat 3s ease-in-out infinite;
+    }
+    @keyframes ringFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .ring-svg { width: 110px; height: 110px; }
+    .ring-glow {
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 12px;
+      background: radial-gradient(ellipse, rgba(255,200,80,0.35), transparent 70%);
+      border-radius: 50%;
+      animation: glowPulse 3s ease-in-out infinite;
+    }
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.5; transform: translateX(-50%) scaleX(1); }
+      50% { opacity: 1; transform: translateX(-50%) scaleX(1.2); }
+    }
+
+    .question-main {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(38px, 9vw, 70px);
+      font-weight: 300;
+      color: #f5e0cc;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .question-sub {
+      font-size: 14px;
+      color: #9e7060;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 3rem;
+    }
+
+    .answer-btns {
+      display: flex;
+      gap: 1.2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-yes {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-style: italic;
+      padding: 15px 50px;
+      background: linear-gradient(135deg, #8b2020, #c0412a);
+      color: #ffe8d8;
+      border: none;
+      border-radius: 40px;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      box-shadow: 0 0 30px rgba(180,50,30,0.45);
+      transition: all 0.3s ease;
+    }
+    .btn-yes:hover {
+      transform: scale(1.07);
+      box-shadow: 0 0 45px rgba(200,70,40,0.6);
+    }
+    .btn-maybe {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      font-style: italic;
+      padding: 13px 32px;
+      background: transparent;
+      color: #7a5040;
+      border: 1px solid rgba(122,80,64,0.4);
+      border-radius: 35px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .btn-maybe:hover { color: #c49a6c; border-color: rgba(196,154,108,0.5); }
+
+    /* ── Yes Page ── */
+    #page-yes {
+      background: radial-gradient(ellipse at 50% 40%, #2e0808 0%, #0d0404 70%);
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+
+    .confetti-hearts {
+      font-size: 28px;
+      margin-bottom: 1.5rem;
+      animation: spin 1.5s ease both;
+    }
+    @keyframes spin {
+      from { transform: scale(0) rotate(-180deg); opacity: 0; }
+      to   { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    .yes-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(50px, 12vw, 88px);
+      font-weight: 300;
+      color: #f5e0cc;
+      line-height: 1.05;
+      margin-bottom: 1rem;
+      animation: fadeUp 0.8s ease both 0.3s;
+    }
+    .yes-title span { color: #e8734a; font-style: italic; }
+
+    .yes-message {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(18px, 4vw, 26px);
+      color: #c49a6c;
+      margin-bottom: 2rem;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+      animation: fadeUp 0.8s ease both 0.6s;
+    }
+
+    .forever-tag {
+      font-size: 11px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: #7a4f35;
+      animation: fadeUp 0.8s ease both 0.9s;
+    }
+
+    .notify-status {
+      margin-top: 1.5rem;
+      font-size: 13px;
+      color: #9e7060;
+      letter-spacing: 0.1em;
+      min-height: 20px;
+      animation: fadeUp 0.8s ease both 1.2s;
+    }
+
+    /* ── Ornament Divider ── */
+    .ornament {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0 auto 2rem;
+      max-width: 200px;
+      opacity: 0.4;
+    }
+    .ornament-line { flex: 1; height: 1px; background: #c49a6c; }
+    .ornament-dot {
+      width: 5px;
+      height: 5px;
+      background: #c49a6c;
+      border-radius: 50%;
+    }
+
+    /* ── Celebration Confetti ── */
+    .celebration-confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 100;
+      overflow: hidden;
+    }
+    .confetti-piece {
+      position: absolute;
+      top: -20px;
+      opacity: 0;
+      animation: confettiFall linear forwards;
+    }
+    @keyframes confettiFall {
+      0%   { transform: translateY(-20px) rotate(0deg) scale(1); opacity: 1; }
+      80%  { opacity: 0.8; }
+      100% { transform: translateY(110vh) rotate(720deg) scale(0.5); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="petals"></div>
+
+<!-- PAGE 1: Hero -->
+<div class="page active" id="page-hero">
+  <div class="candle-row">
+    <div class="candle"><div class="flame"></div><div class="wick"></div><div class="candle-body"></div><div class="candle-base"></div></div>
+    <div class="candle"><div class="flame"></div><div class="wick"></div><div class="candle-body" style="height:70px"></div><div class="candle-base"></div></div>
+    <div class="candle"><div class="flame"></div><div class="wick"></div><div class="candle-body"></div><div class="candle-base"></div></div>
+  </div>
+  <p class="hero-intro">a love letter in pages</p>
+  <h1 class="hero-title">My <span>Love,</span></h1>
+  <p class="hero-sub">there's something I want to ask you</p>
+  <button class="begin-btn" id="begin-btn" onclick="goTo('page-story1')">Begin ✦</button>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="page-story1">
+  <div class="story-page">
+    <p class="step-label">Chapter One</p>
+    <span class="story-icon">🌹</span>
+    <h2 class="story-heading">From the moment<br>I met <em>you</em></h2>
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-dot"></div><div class="ornament-line"></div></div>
+    <p class="story-text">I knew there was something extraordinary about you. The way you laugh, the way your eyes light up — every little thing about you made me feel something I had never felt before. Something warm, and certain, and true.</p>
+    <div class="nav-btns">
+      <button class="nav-btn btn-prev" id="back-to-hero" onclick="goTo('page-hero')">← Back</button>
+      <button class="nav-btn btn-next" id="to-story2" onclick="goTo('page-story2')">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page" id="page-story2">
+  <div class="story-page">
+    <p class="step-label">Chapter Two</p>
+    <span class="story-icon">🕯️</span>
+    <h2 class="story-heading">Every day with you<br>is my <em>favourite</em></h2>
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-dot"></div><div class="ornament-line"></div></div>
+    <p class="story-text">You've turned ordinary moments into memories I'll treasure forever. Morning coffee, quiet evenings, your hand in mine — with you, everything feels like <em>enough</em>. More than enough. Everything.</p>
+    <div class="nav-btns">
+      <button class="nav-btn btn-prev" id="back-to-story1" onclick="goTo('page-story1')">← Back</button>
+      <button class="nav-btn btn-next" id="to-story3" onclick="goTo('page-story3')">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 4 -->
+<div class="page" id="page-story3">
+  <div class="story-page">
+    <p class="step-label">Chapter Three</p>
+    <span class="story-icon">💌</span>
+    <h2 class="story-heading">You are my <em>home,</em><br>my calm, my joy</h2>
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-dot"></div><div class="ornament-line"></div></div>
+    <p class="story-text">You make me want to be better. You make me braver, softer, and more myself all at once. I could search the world over and never find someone who fills my heart the way you do. I am so glad the universe brought you to me.</p>
+    <div class="nav-btns">
+      <button class="nav-btn btn-prev" id="back-to-story2" onclick="goTo('page-story2')">← Back</button>
+      <button class="nav-btn btn-next" id="to-question" onclick="goTo('page-question')">Almost there →</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 5: The Big Question -->
+<div class="page" id="page-question">
+  <div class="ring-container">
+    <svg class="ring-svg" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="55" cy="70" r="26" stroke="#c9aa7a" stroke-width="7" fill="none"/>
+      <polygon points="55,20 44,34 55,30 66,34" fill="#c9aa7a" opacity="0.9"/>
+      <polygon points="55,10 48,22 55,26 62,22" fill="#e8f4ff" opacity="0.95"/>
+      <polygon points="48,22 55,26 55,18" fill="#b8d8ff" opacity="0.8"/>
+      <polygon points="62,22 55,26 55,18" fill="#ddeeff" opacity="0.9"/>
+      <line x1="55" y1="3" x2="55" y2="7" stroke="#fffde0" stroke-width="1.5" stroke-linecap="round" opacity="0.9"/>
+      <line x1="65" y1="6" x2="63" y2="10" stroke="#fffde0" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+      <line x1="45" y1="6" x2="47" y2="10" stroke="#fffde0" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+    </svg>
+    <div class="ring-glow"></div>
+  </div>
+  <h2 class="question-main">Will you marry<br>me?</h2>
+  <p class="question-sub">My Love</p>
+  <div class="answer-btns">
+    <button class="btn-yes" id="btn-yes" onclick="handleYes()">Yes, always ♡</button>
+    <button class="btn-maybe" id="btn-maybe" onclick="handleMaybe(this)">Still thinking…</button>
+  </div>
+</div>
+
+<!-- PAGE 6: YES! -->
+<div class="page" id="page-yes">
+  <div>
+    <div class="confetti-hearts">🌸 💛 🌸</div>
+    <h1 class="yes-title">She said <span>Yes!</span></h1>
+    <p class="yes-message">"And I choose you, every morning, every evening, every ordinary extraordinary day."</p>
+    <p class="forever-tag">✦ &nbsp; together, forever &nbsp; ✦</p>
+    <p class="notify-status" id="notify-status">💌 Written in the stars forever ♡</p>
+  </div>
+</div>
+
+<script>
+  // ── Page Navigation ──
+  function goTo(id) {
+    document.querySelectorAll('.page').forEach(function(p) {
+      p.classList.remove('active');
+    });
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // ── "Maybe" Button Playful Responses ──
+  function handleMaybe(btn) {
+    var texts = [
+      'Are you sure…? 🥺',
+      'I\'ll wait forever…',
+      'Pretty please? 🌹',
+      'I love you so much!',
+      'Your heart knows… 💛'
+    ];
+    btn._i = ((btn._i || 0) + 1) % texts.length;
+    btn.textContent = texts[btn._i];
+  }
+
+  // ── "Yes" Handler with Celebration ──
+  function handleYes() {
+    goTo('page-yes');
+    launchConfetti();
+    var statusEl = document.getElementById('notify-status');
+    statusEl.textContent = '♡ Forever and always, together ♡';
+  }
+
+  // ── Confetti Celebration Effect ──
+  function launchConfetti() {
+    var container = document.createElement('div');
+    container.className = 'celebration-confetti';
+    document.body.appendChild(container);
+
+    var confettiEmojis = ['💍', '❤️', '🌹', '✨', '💛', '🌸', '🥂', '💕', '💖', '🎉'];
+    for (var i = 0; i < 60; i++) {
+      var piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.textContent = confettiEmojis[Math.floor(Math.random() * confettiEmojis.length)];
+      piece.style.left = Math.random() * 100 + 'vw';
+      piece.style.fontSize = (14 + Math.random() * 18) + 'px';
+      piece.style.animationDuration = (2 + Math.random() * 4) + 's';
+      piece.style.animationDelay = (Math.random() * 2) + 's';
+      container.appendChild(piece);
+    }
+
+    // Clean up after animation
+    setTimeout(function() {
+      if (container.parentNode) {
+        container.parentNode.removeChild(container);
+      }
+    }, 8000);
+  }
+
+  // ── Falling Petals Background ──
+  (function() {
+    var petalEl = document.getElementById('petals');
+    var emojis = ['🌸', '🌺', '🌹', '✿', '❀'];
+    for (var i = 0; i < 18; i++) {
+      var p = document.createElement('div');
+      p.className = 'petal';
+      p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.fontSize = (12 + Math.random() * 14) + 'px';
+      p.style.animationDuration = (7 + Math.random() * 10) + 's';
+      p.style.animationDelay = (Math.random() * 12) + 's';
+      petalEl.appendChild(p);
+    }
+  })();
+</script>
+
+</body>
+</html>
